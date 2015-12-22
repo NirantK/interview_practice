@@ -68,6 +68,35 @@ void inOrderPrint(TreeNode *root){
 	inOrderPrint(root->right);
 }
 
+
+// INTERVIEWBIT Solution
+// Pretty neat, does not alter the tree and is 'simple'
+class Solution {
+public:
+    vector<int> inorderTraversal(TreeNode *root) {
+        vector<int> vector;
+        stack<TreeNode *> stack;
+        TreeNode *pCurrent = root;
+
+        while(!stack.empty() || pCurrent)
+        {
+            if(pCurrent)
+            {
+                stack.push(pCurrent);
+                pCurrent = pCurrent->left;
+            }
+            else
+            {
+                TreeNode *pNode = stack.top();
+                vector.push_back(pNode->val);
+                stack.pop();
+                pCurrent = pNode->right;
+            }
+        }
+        return vector;
+    }
+};
+
 int main(int argc, char const *argv[]){
 	TreeNode* root = NULL;
 	root = insert(root, 1);
