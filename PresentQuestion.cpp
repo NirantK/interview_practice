@@ -1,11 +1,7 @@
-// ADJACENT
-// https://www.interviewbit.com/courses/programming/topics/dynamic-programming/problems/adjacent/
-// Again, a simple DP problem which I could not do. 
-// But I saw the algorithm and made some points in this one. 
-// I have seen the recursive solution, 
-// and now trying the iterative one on my own.
-// I think the main advantage of recursive approach is
-// simpler base and edge cases
+// JUMP1
+// https://www.interviewbit.com/courses/programming/topics/dynamic-programming/problems/jump1/?ref=dash-reco
+// Simple problem, not sure why in DP
+// Interviewbit's solution is a pure delight to read
 #include <cstdio>
 #include <iostream>
 #include <vector>
@@ -22,6 +18,22 @@ typedef vector<int> vi;
 typedef vector<vi> vvi;
 #define pb push_back
 #define tr(container, it) for(auto it = container.begin(); it != container.end(); it++)
+class Solution {
+    public:
+        bool canJump(int A[], int n) {
+            int minIndexPossible = n - 1;
+            for (int i = n - 2; i >= 0; i--) {
+                bool isPossibleFromThisIndex = false;
+                if (i + A[i] >= minIndexPossible) {
+                    isPossibleFromThisIndex = true;
+                    minIndexPossible = i;
+                }
+                if (i == 0) return isPossibleFromThisIndex;
+            }
+            return true;
+        }
+};
+
 int canJump(vector<int> &A) {
 	int n = A.size();
 	if(n==1) return 1;
