@@ -1,85 +1,57 @@
+// ADJACENT
+// https://www.interviewbit.com/courses/programming/topics/dynamic-programming/problems/adjacent/
+// Again, a simple DP problem which I could not do. 
+// But I saw the algorithm and made some points in this one. 
+// I have seen the recursive solution, 
+// and now trying the iterative one on my own.
+// I think the main advantage of recursive approach is
+// simpler base and edge cases
 #include <cstdio>
 #include <iostream>
 #include <vector>
 #include <algorithm>
+#include <cstring>
 #include <string>
+#include <stack>
 #include <unordered_map>
 #include <map>
+#include <cassert>
 #include <limits.h>
 using namespace std;
 typedef vector<int> vi;
 typedef vector<vi> vvi;
-typedef vector<string> vs;
-typedef vector<vs> vvs;
 #define pb push_back
 #define tr(container, it) for(auto it = container.begin(); it != container.end(); it++)
-struct TreeNode {
-	int val;
-	TreeNode *left;
-	TreeNode *right;
-	TreeNode(int x) : val(x), left(NULL), right(NULL) {}
-};
-TreeNode* insert(TreeNode* root, int x){
-	if(root==NULL){
-		root = (TreeNode*) new TreeNode(x);
-		// root = temp;
-	}else if(root->val > x){
-		root->left = insert(root->left, x);
-	}else{
-		root->right = insert(root->right, x);
-	}
-	return root;
-}
-vector<int> inorderTraversal(TreeNode* root){
-	vector<int> answer;
-	TreeNode* current = root;
-	TreeNode* pre;
-	while(current!=NULL){
-		if(current->left==NULL){
-			// printf("%d\n", current->val);
-			answer.push_back(current->val);
-			current = current->right;
+int canJump(vector<int> &A) {
+	int n = A.size();
+	if(n==1) return 1;
+	if(A[0]==0) return 0;
+	int reach = 0;
+	for (int i = 0; i <= n-1; ++i){
+		if(A[i]!=0){
+			reach = max(i + A[i], reach);
+			// printf("\nreach: %d, A[i]=%d\n", reach, A[i]);
+			if(reach >= n){
+				return 1;
+			}
+		}
+		else if(i < reach){
+			continue;
 		}
 		else{
-			pre = current -> left;
-			while(pre->right!=NULL && pre->right !=current){
-				pre = pre->right;
-			}
-
-			if(pre->right == NULL){
-				pre->right = current;
-				current = current -> left;
-			}else{ // pre->right == current is true here
-				pre->right == NULL;
-				// printf("%d\n", current->val);
-				answer.push_back(current->val)
-				current = current ->right;
-			}
-
+			return 0;
 		}
 	}
-	return answer;
-}
-
-void inOrderPrint(TreeNode *root){
-	if(root == NULL) return;
-	inOrderPrint(root->left);
-	printf("%d ", root->val);
-	inOrderPrint(root->right);
-}
-
-int main(int argc, char const *argv[]){
-	TreeNode* root = NULL;
-	root = insert(root, 1);
-	root->left = insert(root->left, 2);
-	root->left->left = insert(root->left->left, 3);
-	root->left->left->left = insert(root->left->left->left, 4);
-	root->left->right = insert(root->left->right, 5);
-	root->right = insert(root->right,6);
-	root->right->left = insert(root->right->left, 7);
-	root->right->right = insert(root->right->right, 8);
-	root->right->right->right = insert(root->right->right->right, 9);
-	inOrderPrint(root);
-	inorderTraversal(root);
 	return 0;
+}
+int main(int argc, char const *argv[]){
+	vi input = {2,3,1,1,4};
+	printf("%d\n", canJump(input)==1);
+	input = {3,2,1,0,4};
+	printf("%d\n", canJump(input)==0);
+	input = { 16, 0, 0, 0, 12, 1, 13, 1, 30, 0, 14, 0, 0, 3, 0, 0, 2, 0, 0, 0, 7, 0, 0, 0, 0, 16, 0, 14, 0, 22, 0, 0, 0, 5, 0, 0, 0, 0, 7, 0, 26, 0, 0, 13, 22, 0, 0, 0, 0, 22, 0, 0, 0, 16, 0, 0, 29, 0, 0, 0, 3, 0, 0, 0, 28, 0, 0, 0, 29, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 22, 0, 0, 0, 0, 0, 3, 0, 0, 0, 19, 0, 0, 15, 0, 0, 30, 0, 0, 0, 0, 0, 0, 12, 0, 19, 6, 30, 0, 0, 0, 0, 0, 0, 0, 0, 0, 17, 12, 0, 24, 16, 21, 0, 8, 0, 14, 6, 0, 0, 5, 23, 0, 22, 0, 15, 15, 0, 26, 0, 14, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 13, 0, 24, 0, 0, 16, 24, 0, 9, 0, 0, 0, 0, 0, 21, 0, 0, 25, 0, 0, 0, 0, 0, 27, 0, 0, 0, 0, 0, 0, 0, 24, 0, 0, 0, 0, 0, 30, 10, 0, 18, 30, 0, 0, 0, 0, 0, 0, 19, 0, 0, 0, 0, 29, 0, 0, 0, 8, 7, 29, 16, 30, 0, 0, 3, 0, 0, 0, 17, 0, 0, 22, 0, 0, 0, 0, 0, 18, 0, 0, 11, 11, 0, 0, 0, 0, 11, 19, 2, 0, 0, 0, 2, 0, 16, 11, 21, 0, 10, 0, 29, 0, 0, 0, 0, 0, 1, 15, 0, 0, 0, 0, 0, 0, 12, 0, 0, 0, 0, 0, 29, 0, 9, 0, 6, 0, 0, 0, 8, 0, 0, 0, 0, 0, 0, 0, 0, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 13, 0, 0, 0, 0, 0, 0, 11, 0, 0, 21, 0, 0, 0, 0, 4, 0, 0, 0, 0, 14, 21, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 0, 0, 21, 0, 0, 0, 0, 0, 0, 0, 0, 21, 0, 0, 14, 0, 0, 0, 0, 29, 24, 0, 4, 0, 0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 30, 0, 0, 0, 0, 0, 0, 0, 25, 0, 9, 0, 0, 0, 0, 24, 21, 12, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 29, 2, 0, 0, 0, 22, 9, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 8, 29, 19, 0, 0, 0, 14, 24, 0, 22, 0, 24, 0, 0, 5, 0, 0, 0, 28, 0, 0, 29, 0, 0, 27, 13, 0, 18, 0, 0, 0, 0, 11, 11, 0, 0, 28, 0, 0, 0, 0, 0, 0, 0, 0, 15, 0, 0, 0, 0, 0, 12, 0, 0, 12, 19, 23, 0, 20, 0, 8, 6, 23, 17, 14, 0, 0, 24, 3, 0, 0, 0, 6, 11, 24, 0, 0, 0, 0, 0, 0, 18, 0, 0, 1, 27, 0, 1, 0, 0, 0, 0, 0, 19, 0, 0, 0, 0, 11, 16, 0, 0, 24, 25, 0, 0, 17, 0, 0, 0, 0, 21, 0, 0, 0, 0, 0, 9, 19, 0, 0, 0, 0, 0, 0, 6, 0, 0, 5, 0, 15, 17, 14, 1, 27, 0, 0, 24, 16, 28, 0, 18, 0, 20, 20, 0, 29, 0, 2, 29, 0, 0, 17, 0, 30, 0, 0, 0, 0, 0, 29, 15, 0, 0, 0, 0, 0, 0, 0, 14, 0, 0, 16, 0, 0, 0, 0, 0, 0, 18, 20, 0, 0, 0, 0, 0, 0, 0, 9, 0, 0, 21, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 28, 11, 19, 0, 0, 25, 0, 0, 20, 0, 0, 0, 0, 0, 15, 0, 0, 6, 3, 4, 0, 0, 0, 0, 22, 0, 2, 0, 0, 0, 14, 0, 0, 5, 0, 18, 27, 0, 0, 0, 0, 0, 28, 0, 0, 0, 9, 0, 20, 4, 28, 0, 0, 4, 0, 0, 3, 0, 3, 9, 3, 0, 6, 0, 0, 0, 0, 0, 0, 13, 0, 23, 0, 0, 16, 5, 0, 27, 4, 0, 28, 0, 0, 0, 0, 0, 0, 0, 5, 0, 24, 0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 4, 10, 28, 0, 0, 0, 22, 14, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 0, 21, 0, 30, 0, 0, 19, 0, 0, 0, 0, 7, 0, 22, 0, 0, 0, 0, 0, 0, 14, 0, 0, 0, 0, 0, 13, 29, 18, 0, 0, 0, 0, 0, 0, 0, 0, 29, 30, 0, 0, 0, 28, 0, 0, 18, 26, 0, 0, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 27, 0, 0, 0, 0, 0, 0, 19, 0, 0, 0, 29, 16, 13, 0, 3, 0, 0, 11, 12, 7, 3, 0, 2, 0, 0, 16, 0, 0, 26, 0, 15, 0, 20, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 25, 3, 27, 0, 0, 0, 13, 0, 0, 0, 0, 22, 25, 0, 22, 25, 0, 17, 29, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9, 28, 8, 1, 0, 0, 0, 0, 0, 29, 15, 16, 0, 0, 0, 0, 0, 0, 23, 28, 0, 0, 0, 2, 0, 12, 27, 0, 22, 0, 0 };
+	printf("%d\n", canJump(input)==1);
+	input = {0, 2, 3};
+	printf("%d\n", canJump(input)==0);
+	return 0; 
 }
